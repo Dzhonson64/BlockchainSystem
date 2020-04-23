@@ -1,5 +1,4 @@
 package blockchain;
-import java.security.MessageDigest;
 import java.util.Scanner;
 
 public class Main {
@@ -12,13 +11,14 @@ public class Main {
         }catch (Exception e){
             System.out.println("Error: " + e.getClass());
         }
-        BlockchainSystem b = new BlockchainSystem("./chainSerealizeable.txt");b.createChain(N, "123");
-        b.createChain(N, "123");
-        b.createChain(N,"123");
-        b.createChain(N,"123");
-        b.createChain(N,"123");
-        b.simpleShow();
-        b.showFromFile();
+        BlockchainSystem b = new BlockchainSystem("./chainSerealizeable.txt", N);
+        b.createChain();
+        b.createChain();
+        b.createChain();
+        b.createChain();
+        b.createChain();
+        /*b.simpleShow();
+        b.showFromFile();*/
     }
 }
 

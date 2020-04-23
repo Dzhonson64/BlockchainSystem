@@ -2,56 +2,47 @@ package blockchain;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class BlockchainSystem {
-    private String filePathSerialize;
+    private final String filePathSerialize;
     private List<Chain> chainList;
-    private static int countChain;
+    private static int COUNT_CHAIN;
     private Chain tempChain;
+    public static int ZEROS_COUNT;
 
 
 
-    public BlockchainSystem(String filePathSerialize) {
+    public BlockchainSystem(String filePathSerialize, int zerosCount) {
         SerializeFile.clearFile(filePathSerialize);
         SerializeFile.openSerialize(filePathSerialize);
         this.filePathSerialize = filePathSerialize;
         this.chainList = new ArrayList<>();
-        countChain = 0;
+        COUNT_CHAIN = 0;
         tempChain = null;
-
+        ZEROS_COUNT = zerosCount;
     }
 
-    public void createChain(int countZeros, String str) {
-        long timeStart = System.currentTimeMillis();
-        int numMagic = StringUtil.createMagicNumber();
+    public void createChain() {
+        long timeStart = System.nanoTime();
         Chain chain;
-        if (countChain == 0) {
+        if (COUNT_CHAIN == 0) {
             chain = new Chain(
-                    countZeros,
-                    StringUtil.applySha256(str, numMagic),
-                    countChain,
-                    numMagic
+                    COUNT_CHAIN
             );
-            //chainList.add(chain);
         }
         else {
             chain = new Chain(
-                    countZeros,
-                    StringUtil.applySha256(str, numMagic),
-                    countChain,
-                    tempChain.getCurrentHash(),
-                    numMagic
+                    COUNT_CHAIN,
+                    tempChain.getCurrentHash()
             );
-            //chainList.add(chain);
         }
-        long timeFinish = System.currentTimeMillis();
+        long timeFinish = System.nanoTime();
         System.out.print(chain.toString());
-        System.out.println("Block was generating for " + (timeFinish - timeStart)*10e-3 + " seconds\n");
+        System.out.println("Block was generating for " + (timeFinish - timeStart)/1000000000.0 + " seconds\n");
         tempChain = chain;
         SerializeFile.writeSerialize(chain);
-        countChain++;
+        COUNT_CHAIN++;
     }
 
     public void simpleShow() {
@@ -75,7 +66,7 @@ public class BlockchainSystem {
     }
 
     private void deserialize(){
-        for (int i = 0; i < countChain; i++) {
+        for (int i = 0; i < COUNT_CHAIN; i++) {
             Chain p = (Chain) SerializeFile.readSerialize();
             chainList.add(p);
         }

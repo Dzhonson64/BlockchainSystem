@@ -4,6 +4,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Random;
 
 public class Chain implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -14,18 +15,16 @@ public class Chain implements Serializable {
     private int magicNumber;
 
 
-    public Chain(int countZeros, String currentHash, int id, int numMagic) {
+    public Chain(int id) {
         timeStamp = new Date().getTime();
-        this.magicNumber =  numMagic;
-        this.currentHash = getNewHash(currentHash, countZeros);
+        this.currentHash = getNewHash();
         this.id = id;
         prevHash = "0";
 
     }
-    public Chain(int countZeros, String currentHash, int id, String prevHash, int numMagic) {
+    public Chain(int id, String prevHash) {
         timeStamp = new Date().getTime();
-        this.magicNumber = numMagic;
-        this.currentHash = getNewHash(currentHash, countZeros);
+        this.currentHash = getNewHash();
         this.id = id;
         this.prevHash = prevHash;
 
@@ -50,19 +49,23 @@ public class Chain implements Serializable {
                 currentHash + "\n";
     }
 
-    private String getNewHash(String currentHash, int countZeros){
-        StringBuilder zeros = new StringBuilder();
-        for (int i = 0; i < countZeros; i++){
-            zeros.append("0");
+    private String getNewHash(){
+        magicNumber = createMagicNumber();
+        String currentHash = StringUtil.applySha256(id + timeStamp + getPrevHash() + magicNumber);
+        while(!currentHash.startsWith("0".repeat(BlockchainSystem.ZEROS_COUNT))){
+            magicNumber = createMagicNumber();
+            currentHash = StringUtil.applySha256(id + timeStamp + getPrevHash() + magicNumber);
         }
-        if (currentHash.length() > 64-countZeros){
-            currentHash = currentHash.substring(0, 64-countZeros);
-        }/*else if(currentHash.length() < 64){
-            for (int i = 0; i < 64 - currentHash.length(); i++){
-                currentHash += "0";
-            }
-        }*/
-        return zeros + currentHash;
+        if (currentHash.length() > 64 - BlockchainSystem.ZEROS_COUNT){
+            currentHash = currentHash.substring(0, 64 - BlockchainSystem.ZEROS_COUNT);
+        }
+        return currentHash;
+    }
+
+    public static int createMagicNumber() {
+        Random rnd = new Random();
+        return  rnd.nextInt((int)10e6) + (int)10e7;
+
     }
 
 }
