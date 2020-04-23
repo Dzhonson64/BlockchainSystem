@@ -13,7 +13,7 @@ public class Main {
             System.out.println("Error: " + e.getClass());
         }
         BlockchainSystem b = new BlockchainSystem("./chainSerealizeable.txt");
-        b.createChain(N, "123");
+        b.createChain(N, "123" );
         b.createChain(N, "123");
         b.createChain(N,"123");
         b.createChain(N,"123");
