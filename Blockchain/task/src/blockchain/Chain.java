@@ -57,7 +57,11 @@ public class Chain implements Serializable {
         }
         if (currentHash.length() > 64-countZeros){
             currentHash = currentHash.substring(0, 64-countZeros);
-        }
+        }/*else if(currentHash.length() < 64){
+            for (int i = 0; i < 64 - currentHash.length(); i++){
+                currentHash += "0";
+            }
+        }*/
         return zeros + currentHash;
     }
 

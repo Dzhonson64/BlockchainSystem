@@ -12,14 +12,13 @@ public class Main {
         }catch (Exception e){
             System.out.println("Error: " + e.getClass());
         }
-        BlockchainSystem b = new BlockchainSystem("./chainSerealizeable.txt");
-        b.createChain(N, "123" );
+        BlockchainSystem b = new BlockchainSystem("./chainSerealizeable.txt");b.createChain(N, "123");
         b.createChain(N, "123");
         b.createChain(N,"123");
         b.createChain(N,"123");
         b.createChain(N,"123");
-        /*b.simpleShow();
-        b.showFromFile();*/
+        b.simpleShow();
+        b.showFromFile();
     }
 }
 
