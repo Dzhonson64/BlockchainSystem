@@ -2,14 +2,19 @@ package blockchain;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.*;
 
 public class BlockchainSystem {
     private final String filePathSerialize;
-    private List<Chain> chainList;
-    private static int COUNT_CHAIN;
-    private Chain tempChain;
-    public static int ZEROS_COUNT;
+    private volatile List<Chain> chainList;
+    private volatile static int COUNT_CHAIN;
+    private volatile static Chain tempChain;
+    public volatile int ZEROS_COUNT;
+    public volatile String nameThread;
+
 
 
 
@@ -21,28 +26,78 @@ public class BlockchainSystem {
         COUNT_CHAIN = 0;
         tempChain = null;
         ZEROS_COUNT = zerosCount;
+        nameThread = null;
     }
 
-    public void createChain() {
+    public double createChain(Map<String, String> data){
         long timeStart = System.nanoTime();
         Chain chain;
         if (COUNT_CHAIN == 0) {
             chain = new Chain(
+                    ZEROS_COUNT
+            );
+        }
+        else {
+            chain = new Chain(
+                    ZEROS_COUNT,
+                    tempChain.getCurrentHash()
+            );
+        }
+        double timeFinish = System.nanoTime();
+        synchronized (this){
+            if (nameThread == null){
+                nameThread = Thread.currentThread().getName();
+            }
+        }
+        //chainList.add(chain);
+        chain.setData(data);
+
+        System.out.print(chain.toString());
+        double time =  (timeFinish - timeStart)/1000000000.0;
+        System.out.println("Block was generating for " + time + " seconds");
+        //System.out.println("Block was generating for " + time + " seconds");
+        tempChain = chain;
+        SerializeFile.writeSerialize(chain);
+        synchronized (this) {
+            COUNT_CHAIN++;
+        }
+
+        return time;
+    }
+
+    public double createChain() {
+        long timeStart = System.nanoTime();
+        Chain chain;
+        if (COUNT_CHAIN == 0) {
+            chain = new Chain(
+                    ZEROS_COUNT,
                     COUNT_CHAIN
             );
         }
         else {
             chain = new Chain(
+                    ZEROS_COUNT,
                     COUNT_CHAIN,
                     tempChain.getCurrentHash()
             );
         }
         long timeFinish = System.nanoTime();
+        synchronized (this){
+            if (nameThread == null){
+                nameThread = Thread.currentThread().getName();
+            }
+        }
+        //chainList.add(chain);
         System.out.print(chain.toString());
-        System.out.println("Block was generating for " + (timeFinish - timeStart)/1000000000.0 + " seconds\n");
+        double time =  (timeFinish - timeStart)/1000000000.0;
+        System.out.println("Block was generating for " + time + " seconds");
+        System.out.println("Block was generating for " + time + " seconds");
         tempChain = chain;
         SerializeFile.writeSerialize(chain);
-        COUNT_CHAIN++;
+        synchronized (this) {
+            COUNT_CHAIN++;
+        }
+        return time;
     }
 
     public void simpleShow() {
@@ -83,6 +138,36 @@ public class BlockchainSystem {
             }
         }
         return true;
+    }
+
+    public void mining(int countThreads) throws ExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(countThreads);
+        int N = 0;
+        for (int i = 0; i < 5; i++) {
+            List<Chain> tasks = new ArrayList<>();
+            for (int j = 0; j < countThreads; j++) {
+                tasks.add(new Chain(N, i+1));
+            }
+
+            Map<String, String> data = executorService.invokeAny(tasks);
+            double time = createChain(data);
+            if (time < 3.0E-6){
+                N++;
+                System.out.println("N was increased to " +  N + "\n");
+            }else{
+                System.out.println("N stays the same" + "\n");
+            }
+            /*for (String it: data.values()) {
+                System.out.println(it);
+            }*/
+        }
+
+
+        try {
+            executorService.awaitTermination(60, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
