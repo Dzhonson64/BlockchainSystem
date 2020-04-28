@@ -1,324 +1,186 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="BlockchainTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-04-23T04:53:02" hostname="DESKTOP-1KRLA0S" time="0.183">
+<testsuite name="BlockchainTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2020-04-28T08:28:05" hostname="DESKTOP-1KRLA0S" time="2.239">
   <properties/>
-  <testcase name="start" classname="BlockchainTest" time="0.183"/>
+  <testcase name="start" classname="BlockchainTest" time="2.239">
+    <failure message="java.lang.AssertionError: Wrong answer in test #1&#10;&#10;Every block should contain at least 12 lines of data&#10;&#10;Please find below the output of your program during this failed test.&#10;&#10;---&#10;&#10;Block:&#10;Created by miner # 1&#10;Id: 0&#10;Timestamp: 1588062485353&#10;Magic number: 106715406&#10;Hash of the previous block:&#10;1fa026a543bc20980dd9c1c5c533eb0a8bf4d4981ed1cc14b141dcbb8204e8b1&#10;Hash of the block:&#10;0398050aa426cc2c99e755abae39f4b9ef13a8ddff0924c913f87d00b54e5a8b&#10;Block was generating for 0.0042582 seconds&#10;N was increased to 2&#10;&#10;Block:&#10;Created by miner # 1&#10;Id: 1&#10;Timestamp: 1588062485393&#10;Magic number: 100837779&#10;Hash of the previous block:&#10;0398050aa426cc2c99e755abae39f4b9ef13a8ddff0924c913f87d00b54e5a8b&#10;Hash of the block:&#10;004bfd2e083f4e91a75e3d3751d408e9ac8827ddcc84b714a00ec505cb2c442e&#10;Block was generating for 0.0131643 seconds&#10;N was increased to 3&#10;&#10;Block:&#10;Created by miner # 4&#10;Id: 2&#10;Timestamp: 1588062485514&#10;Magic number: 108587396&#10;Hash of the previous block:&#10;004bfd2e083f4e91a75e3d3751d408e9ac8827ddcc84b714a00ec505cb2c442e&#10;Hash of the block:&#10;000c0f7f747065c29694996bc8846d0d0c3dd0a3849c74bc43a73d8f1bd30c52&#10;Block was generating for 0.0034042 seconds&#10;N was increased to 4&#10;&#10;Block:&#10;Created by miner # 1&#10;Id: 3&#10;Timestamp: 1588062485530&#10;Magic number: 105735089&#10;Hash of the previous block:&#10;000c0f7f747065c29694996bc8846d0d0c3dd0a3849c74bc43a73d8f1bd30c52&#10;Hash of the block:&#10;00009d558bbe9db0d8d6c394d111a69b5a16e81761f4e5bff84fab1c579975b5&#10;Block was generating for 0.0864229 seconds&#10;N was increased to 5&#10;&#10;Block:&#10;Created by miner # 3&#10;Id: 4&#10;Timestamp: 1588062486842&#10;Magic number: 106849326&#10;Hash of the previous block:&#10;00009d558bbe9db0d8d6c394d111a69b5a16e81761f4e5bff84fab1c579975b5&#10;Hash of the block:&#10;000005b00a7edac442ab6e588e6edbcbe195c7679644d4019feb6c1c7f352ba4&#10;Block was generating for 0.6628794 seconds&#10;N was increased to 6" type="java.lang.AssertionError">java.lang.AssertionError: Wrong answer in test #1
+
+Every block should contain at least 12 lines of data
+
+Please find below the output of your program during this failed test.
+
+---
+
+Block:
+Created by miner # 1
+Id: 0
+Timestamp: 1588062485353
+Magic number: 106715406
+Hash of the previous block:
+1fa026a543bc20980dd9c1c5c533eb0a8bf4d4981ed1cc14b141dcbb8204e8b1
+Hash of the block:
+0398050aa426cc2c99e755abae39f4b9ef13a8ddff0924c913f87d00b54e5a8b
+Block was generating for 0.0042582 seconds
+N was increased to 2
+
+Block:
+Created by miner # 1
+Id: 1
+Timestamp: 1588062485393
+Magic number: 100837779
+Hash of the previous block:
+0398050aa426cc2c99e755abae39f4b9ef13a8ddff0924c913f87d00b54e5a8b
+Hash of the block:
+004bfd2e083f4e91a75e3d3751d408e9ac8827ddcc84b714a00ec505cb2c442e
+Block was generating for 0.0131643 seconds
+N was increased to 3
+
+Block:
+Created by miner # 4
+Id: 2
+Timestamp: 1588062485514
+Magic number: 108587396
+Hash of the previous block:
+004bfd2e083f4e91a75e3d3751d408e9ac8827ddcc84b714a00ec505cb2c442e
+Hash of the block:
+000c0f7f747065c29694996bc8846d0d0c3dd0a3849c74bc43a73d8f1bd30c52
+Block was generating for 0.0034042 seconds
+N was increased to 4
+
+Block:
+Created by miner # 1
+Id: 3
+Timestamp: 1588062485530
+Magic number: 105735089
+Hash of the previous block:
+000c0f7f747065c29694996bc8846d0d0c3dd0a3849c74bc43a73d8f1bd30c52
+Hash of the block:
+00009d558bbe9db0d8d6c394d111a69b5a16e81761f4e5bff84fab1c579975b5
+Block was generating for 0.0864229 seconds
+N was increased to 5
+
+Block:
+Created by miner # 3
+Id: 4
+Timestamp: 1588062486842
+Magic number: 106849326
+Hash of the previous block:
+00009d558bbe9db0d8d6c394d111a69b5a16e81761f4e5bff84fab1c579975b5
+Hash of the block:
+000005b00a7edac442ab6e588e6edbcbe195c7679644d4019feb6c1c7f352ba4
+Block was generating for 0.6628794 seconds
+N was increased to 6
+	at org.junit.Assert.fail(Assert.java:88)
+	at org.hyperskill.hstest.stage.StageTest.start(StageTest.java:97)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:110)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:38)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:62)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:51)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)
+	at com.sun.proxy.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.processTestClass(TestWorker.java:118)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:175)
+	at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:157)
+	at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:404)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:63)
+	at org.gradle.internal.concurrent.ManagedExecutorImpl$1.run(ManagedExecutorImpl.java:46)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at org.gradle.internal.concurrent.ThreadFactoryImpl$ManagedThreadRunnable.run(ThreadFactoryImpl.java:55)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+</failure>
+  </testcase>
   <system-out><![CDATA[?[1;31m
 Start test 1?[0m
-> 0
 Block:
+Created by miner # 1
 Id: 0
-Timestamp: 1587617582707
-Magic number: 101759437
+Timestamp: 1588062485353
+Magic number: 106715406
 Hash of the previous block:
-0
+1fa026a543bc20980dd9c1c5c533eb0a8bf4d4981ed1cc14b141dcbb8204e8b1
 Hash of the block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Block was generating for 0.11 seconds
+0398050aa426cc2c99e755abae39f4b9ef13a8ddff0924c913f87d00b54e5a8b
+Block was generating for 0.0042582 seconds
+N was increased to 2
 
 Block:
+Created by miner # 1
 Id: 1
-Timestamp: 1587617582740
-Magic number: 105261029
+Timestamp: 1588062485393
+Magic number: 100837779
 Hash of the previous block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
+0398050aa426cc2c99e755abae39f4b9ef13a8ddff0924c913f87d00b54e5a8b
 Hash of the block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Block was generating for 0.0 seconds
+004bfd2e083f4e91a75e3d3751d408e9ac8827ddcc84b714a00ec505cb2c442e
+Block was generating for 0.0131643 seconds
+N was increased to 3
 
 Block:
+Created by miner # 4
 Id: 2
-Timestamp: 1587617582743
-Magic number: 109699251
+Timestamp: 1588062485514
+Magic number: 108587396
 Hash of the previous block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
+004bfd2e083f4e91a75e3d3751d408e9ac8827ddcc84b714a00ec505cb2c442e
 Hash of the block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Block was generating for 0.0 seconds
+000c0f7f747065c29694996bc8846d0d0c3dd0a3849c74bc43a73d8f1bd30c52
+Block was generating for 0.0034042 seconds
+N was increased to 4
 
 Block:
+Created by miner # 1
 Id: 3
-Timestamp: 1587617582744
-Magic number: 103043213
+Timestamp: 1588062485530
+Magic number: 105735089
 Hash of the previous block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
+000c0f7f747065c29694996bc8846d0d0c3dd0a3849c74bc43a73d8f1bd30c52
 Hash of the block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Block was generating for 0.0 seconds
+00009d558bbe9db0d8d6c394d111a69b5a16e81761f4e5bff84fab1c579975b5
+Block was generating for 0.0864229 seconds
+N was increased to 5
 
 Block:
+Created by miner # 3
 Id: 4
-Timestamp: 1587617582746
-Magic number: 105901406
+Timestamp: 1588062486842
+Magic number: 106849326
 Hash of the previous block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
+00009d558bbe9db0d8d6c394d111a69b5a16e81761f4e5bff84fab1c579975b5
 Hash of the block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Block was generating for 0.0 seconds
-
-?[1;31m
-Start test 2?[0m
-> 1
-Block:
-Id: 0
-Timestamp: 1587617582760
-Magic number: 102676508
-Hash of the previous block:
-0
-Hash of the block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Block was generating for 0.02 seconds
-
-Block:
-Id: 1
-Timestamp: 1587617582763
-Magic number: 102678960
-Hash of the previous block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Hash of the block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Block was generating for 0.0 seconds
-
-Block:
-Id: 2
-Timestamp: 1587617582765
-Magic number: 101248687
-Hash of the previous block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Hash of the block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Block was generating for 0.0 seconds
-
-Block:
-Id: 3
-Timestamp: 1587617582766
-Magic number: 105722961
-Hash of the previous block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Hash of the block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Block was generating for 0.0 seconds
-
-Block:
-Id: 4
-Timestamp: 1587617582767
-Magic number: 104316960
-Hash of the previous block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Hash of the block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Block was generating for 0.0 seconds
-
-?[1;31m
-Start test 3?[0m
-> 2
-Block:
-Id: 0
-Timestamp: 1587617582776
-Magic number: 101501372
-Hash of the previous block:
-0
-Hash of the block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Block was generating for 0.01 seconds
-
-Block:
-Id: 1
-Timestamp: 1587617582779
-Magic number: 109758605
-Hash of the previous block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Hash of the block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Block was generating for 0.0 seconds
-
-Block:
-Id: 2
-Timestamp: 1587617582780
-Magic number: 100665685
-Hash of the previous block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Hash of the block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Block was generating for 0.0 seconds
-
-Block:
-Id: 3
-Timestamp: 1587617582782
-Magic number: 103445087
-Hash of the previous block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Hash of the block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Block was generating for 0.0 seconds
-
-Block:
-Id: 4
-Timestamp: 1587617582783
-Magic number: 102194447
-Hash of the previous block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Hash of the block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Block was generating for 0.0 seconds
-
-?[1;31m
-Start test 4?[0m
-> 0
-Block:
-Id: 0
-Timestamp: 1587617582796
-Magic number: 100662711
-Hash of the previous block:
-0
-Hash of the block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Block was generating for 0.02 seconds
-
-Block:
-Id: 1
-Timestamp: 1587617582799
-Magic number: 104590974
-Hash of the previous block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Hash of the block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Block was generating for 0.0 seconds
-
-Block:
-Id: 2
-Timestamp: 1587617582801
-Magic number: 106172326
-Hash of the previous block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Hash of the block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Block was generating for 0.0 seconds
-
-Block:
-Id: 3
-Timestamp: 1587617582802
-Magic number: 100973105
-Hash of the previous block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Hash of the block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Block was generating for 0.0 seconds
-
-Block:
-Id: 4
-Timestamp: 1587617582803
-Magic number: 100271217
-Hash of the previous block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Hash of the block:
-a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
-Block was generating for 0.0 seconds
-
-?[1;31m
-Start test 5?[0m
-> 1
-Block:
-Id: 0
-Timestamp: 1587617582812
-Magic number: 103527379
-Hash of the previous block:
-0
-Hash of the block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Block was generating for 0.02 seconds
-
-Block:
-Id: 1
-Timestamp: 1587617582816
-Magic number: 109717288
-Hash of the previous block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Hash of the block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Block was generating for 0.01 seconds
-
-Block:
-Id: 2
-Timestamp: 1587617582817
-Magic number: 101142769
-Hash of the previous block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Hash of the block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Block was generating for 0.0 seconds
-
-Block:
-Id: 3
-Timestamp: 1587617582819
-Magic number: 108388913
-Hash of the previous block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Hash of the block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Block was generating for 0.01 seconds
-
-Block:
-Id: 4
-Timestamp: 1587617582820
-Magic number: 101845881
-Hash of the previous block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Hash of the block:
-0a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae
-Block was generating for 0.0 seconds
-
-?[1;31m
-Start test 6?[0m
-> 2
-Block:
-Id: 0
-Timestamp: 1587617582831
-Magic number: 104105819
-Hash of the previous block:
-0
-Hash of the block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Block was generating for 0.02 seconds
-
-Block:
-Id: 1
-Timestamp: 1587617582835
-Magic number: 102165023
-Hash of the previous block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Hash of the block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Block was generating for 0.0 seconds
-
-Block:
-Id: 2
-Timestamp: 1587617582836
-Magic number: 105739007
-Hash of the previous block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Hash of the block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Block was generating for 0.0 seconds
-
-Block:
-Id: 3
-Timestamp: 1587617582838
-Magic number: 103911837
-Hash of the previous block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Hash of the block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Block was generating for 0.0 seconds
-
-Block:
-Id: 4
-Timestamp: 1587617582839
-Magic number: 105877321
-Hash of the previous block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Hash of the block:
-00a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a
-Block was generating for 0.0 seconds
+000005b00a7edac442ab6e588e6edbcbe195c7679644d4019feb6c1c7f352ba4
+Block was generating for 0.6628794 seconds
+N was increased to 6
 
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>

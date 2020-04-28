@@ -10,7 +10,7 @@ public class Main {
         int N = 1;
 
         BlockchainSystem blockchainSystem =  new BlockchainSystem("./chainSerealizeable.txt", N);
-        blockchainSystem.mining(9);
+        blockchainSystem.mining();
 
     }
 }
