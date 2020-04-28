@@ -1,76 +1,75 @@
 package blockchain;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class SerializeFile {
-    private static ObjectOutputStream os;
-    private static ObjectInputStream is;
+    private ObjectOutputStream os;
+    private ObjectInputStream is;
+    private FileOutputStream fos;
+    private FileInputStream fis;
+    private final BlockchainSystem blockchainSystem;
+    public boolean isOpenWrite;
+    public boolean isOpenRead;
 
-    public SerializeFile() {
-
-    }
-    public static void openSerialize(String fileName){
-        FileOutputStream f = null;
-        try {
-            f = new FileOutputStream(fileName, true);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        //BufferedOutputStream bos = new BufferedOutputStream(f);
-        try {
-            os =  new ObjectOutputStream(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public SerializeFile(BlockchainSystem blockchainSystem) {
+        this.blockchainSystem = blockchainSystem;
+        isOpenWrite = false;
+        isOpenRead = false;
     }
 
-    public static void writeSerialize(Object obj){
-        try {
-            os.writeObject(obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public void save(Chain chain) throws IOException {
+        synchronized (blockchainSystem.getChainList()) {
+            if (blockchainSystem.getFilePathSerialize() == null) {
+                return;
+            }
+            if (!isOpenWrite){
+                fos = new FileOutputStream(blockchainSystem.getFilePathSerialize());
+                //var buffer = new BufferedOutputStream(file);
+                os = new ObjectOutputStream(fos);
+                isOpenWrite = true;
+            }
+            os.writeObject(chain);
 
-    public static void openDeserialize(String fileName) throws IOException, ClassNotFoundException{
-        FileInputStream fi = new FileInputStream(fileName);
-        //BufferedInputStream bis = new BufferedInputStream(fi);
-        is = new ObjectInputStream(fi);
-    }
-
-    public static Object readSerialize() {
-        try {
-            return  is.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static void closeSerialize(){
-        try {
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void closeDeserialize(){
+    public Object readSerialize() {
+        synchronized (blockchainSystem.getChainList()) {
+            if (isOpenWrite){
+                try {
+                    os.close();
+                    fos.close();
+                    isOpenWrite = false;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (!isOpenRead){
+
+                try {
+                    fis = new FileInputStream(blockchainSystem.getFilePathSerialize());
+                    is = new ObjectInputStream(fis);
+                    isOpenRead = true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                return is.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    public void closeDeserialize(){
         try {
             is.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void clearFile(String filename){
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter(filename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        writer.print("");
-        writer.close();
     }
 }

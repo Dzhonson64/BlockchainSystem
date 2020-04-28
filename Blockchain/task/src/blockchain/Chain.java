@@ -1,10 +1,7 @@
 package blockchain;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.Callable;
 
 public class Chain implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -73,18 +70,18 @@ public class Chain implements Serializable {
     }
 
     private String createHash(){
-        return  StringUtil.applySha256(Integer.toString(id) + timeStamp  + magicNumber);
+        return StringUtil.applySha256(Integer.toString(id) + timeStamp  + magicNumber);
     }
 
     private String createHash(int magicNumber){
-        return  StringUtil.applySha256(Integer.toString(id) + timeStamp  + magicNumber);
+        return StringUtil.applySha256(Integer.toString(id) + timeStamp  + magicNumber);
     }
 
     public boolean validate(String previousHash) {
-        if (previousHash == null || !previousHash.equals(getCurrentHash())) {
-            return false;
+        if (previousHash == null || !previousHash.equals(getPrevHash())) {
+                return false;
         }
-        return !createHash().equals(getCurrentHash());
+        return createHash().equals(getCurrentHash());
     }
 
     public void setMinerId(int minerId) {
