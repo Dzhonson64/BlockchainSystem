@@ -11,7 +11,13 @@ public class Chain implements Serializable {
     private long timeStamp = 0;
     private int magicNumber;
     private double generationTime = 0.0;
+
+
+
     private int minerId;
+
+
+    private List<String> messages = null;
 
 
     public Chain() {
@@ -21,6 +27,18 @@ public class Chain implements Serializable {
         this.prevHash = BlockchainSystem.LAST_CHAIN == null ? "0" :  BlockchainSystem.LAST_CHAIN.getCurrentHash();
         this.currentHash = getNewHash();
         generationTime = (System.nanoTime() - start)/1000000000.0;
+    }
+
+    public Chain(int id, long timeStamp, int magicNumber, int idMiner, double generationTime) {
+        long start = System.nanoTime();
+        this.timeStamp = timeStamp;
+        this.magicNumber = magicNumber;
+        this.id = id;
+        this.minerId = idMiner;
+        this.prevHash = BlockchainSystem.LAST_CHAIN == null ? "0" :  BlockchainSystem.LAST_CHAIN.getCurrentHash();
+        this.currentHash = createHash(magicNumber);
+        this.generationTime = generationTime/1000000000.0;
+        messages = new ArrayList<>();
     }
 
     public Chain(String defaultHash){
@@ -37,7 +55,7 @@ public class Chain implements Serializable {
 
     @Override
     public synchronized String toString() {
-        return  "Block:" +
+        return  "\nBlock:" +
                 "\nCreated by miner # " + minerId/*"*/ +
                 "\nId: " + id +
                 "\nTimestamp: " + timeStamp +
@@ -46,6 +64,8 @@ public class Chain implements Serializable {
                  prevHash +
                 "\nHash of the block:\n" +
                 currentHash  +
+                "\nBlock data:" +
+                getMessagesString() +
                 "\nBlock was generating for " + generationTime + " seconds";
     }
 
@@ -63,6 +83,24 @@ public class Chain implements Serializable {
             currentHash = StringUtil.applySha256(Integer.toString(id) + timeStamp  + magicNumber);
         }
         return magicNumber;
+    }
+
+    public static List<Object> createMagicNumbers() {
+        Random rnd = new Random();
+
+        List<Object> str = new ArrayList<>();
+        str.add(BlockchainSystem.COUNT_CHAIN);
+        long timeStamp = new Date().getTime();
+        str.add(timeStamp);
+
+        int magicNumber = rnd.nextInt((int)10e6) + (int)10e7;
+        String currentHash = StringUtil.applySha256(Integer.toString(BlockchainSystem.COUNT_CHAIN) + timeStamp + magicNumber);
+        while(!currentHash.startsWith("0".repeat(BlockchainSystem.ZEROS_COUNT))){
+            magicNumber = rnd.nextInt((int)10e6) + (int)10e7;
+            currentHash = StringUtil.applySha256(Integer.toString(BlockchainSystem.COUNT_CHAIN) + timeStamp  + magicNumber);
+        }
+        str.add(magicNumber);
+        return str;
     }
 
     public double getGenerationTime() {
@@ -86,6 +124,29 @@ public class Chain implements Serializable {
 
     public void setMinerId(int minerId) {
         this.minerId = minerId;
+    }
+
+
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
+    }
+
+    public String getMessagesString() {
+        String result = "";
+        if (messages != null){
+            for (int i = 0; i < messages.size(); i++) {
+                result += messages.get(i);
+                if (i != messages.size() - 1) {
+                    result += "\n";
+                }
+
+            }
+
+        }
+        if (result == ""){
+            return " no messages";
+        }
+        return result;
     }
 
 }
