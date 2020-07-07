@@ -17,7 +17,7 @@ public class Chain implements Serializable {
     private int minerId;
 
 
-    private List<String> messages = null;
+    private List<Message> messages = null;
 
 
     public Chain() {
@@ -61,7 +61,7 @@ public class Chain implements Serializable {
                 "\nTimestamp: " + timeStamp +
                 "\nMagic number: " + magicNumber +
                 "\nHash of the previous block:\n" +
-                 prevHash +
+                prevHash +
                 "\nHash of the block:\n" +
                 currentHash  +
                 "\nBlock data:" +
@@ -117,7 +117,7 @@ public class Chain implements Serializable {
 
     public boolean validate(String previousHash) {
         if (previousHash == null || !previousHash.equals(getPrevHash())) {
-                return false;
+            return false;
         }
         return createHash().equals(getCurrentHash());
     }
@@ -127,7 +127,7 @@ public class Chain implements Serializable {
     }
 
 
-    public void setMessages(List<String> messages) {
+    public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
 
@@ -135,7 +135,7 @@ public class Chain implements Serializable {
         String result = "";
         if (messages != null){
             for (int i = 0; i < messages.size(); i++) {
-                result += messages.get(i);
+                result += messages.get(i).getMessageString();
                 if (i != messages.size() - 1) {
                     result += "\n";
                 }

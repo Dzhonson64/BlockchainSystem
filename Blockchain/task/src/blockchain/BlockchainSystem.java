@@ -1,5 +1,6 @@
 package blockchain;
 
+import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,8 +16,8 @@ public class BlockchainSystem {
     protected volatile static Chain LAST_CHAIN;
     protected volatile static int ZEROS_COUNT;
     public volatile String nameThread;
-    public List<String> messages = null;
-    public String[] mess = {
+    public List<Message> messages = null;
+    public String[] messText = {
             "Tom: Hey, I'm first!",
             "Sarah: It's not fair!",
             "Sarah: You always will be first because it is your blockchain!",
@@ -36,10 +37,9 @@ public class BlockchainSystem {
         LAST_CHAIN = new Chain("0");
         ZEROS_COUNT = zerosCount;
         nameThread = null;
-        var path = Paths.get(getFilePathSerialize() );
-        if (Files.exists(path)) {
-            Files.delete(path);
-        }
+        var path = Paths.get(getFilePathSerialize());
+
+
         messages = new ArrayList<>();
     }
 
@@ -142,7 +142,7 @@ public class BlockchainSystem {
     }*/
 
 
-    public void mining2() throws ExecutionException, InterruptedException, IOException {
+    public void mining2() throws Exception {
         ExecutorService executorService = Executors.newWorkStealingPool();
         Chain chain = null;
         int N = 0;
@@ -151,14 +151,19 @@ public class BlockchainSystem {
             for (int j = 0; j < 16; j++) {
                 tasks.add(new Miner());
             }
-
-
-            if (BlockchainSystem.COUNT_CHAIN != 0){
-                Random r = new Random();
-                int g = r.nextInt(mess.length);
-                setMessage(mess[g]);
-            }
             double start = System.nanoTime();
+            synchronized (this) {
+
+                GenerateKeys.generate();
+                messages.add(Message.create(messText[i]));
+
+            }
+//            if (BlockchainSystem.COUNT_CHAIN != 0){
+//                Random r = new Random();
+//                int g = r.nextInt(mess.length);
+//                setMessage(mess[g]);
+//            }
+
             List<Object> data = executorService.invokeAny(tasks);
             double end = System.nanoTime();
             chain = new Chain((int)data.get(0), (long)data.get(1), (int)data.get(2), (int)data.get(3), end - start);
@@ -168,10 +173,11 @@ public class BlockchainSystem {
                 BlockchainSystem.COUNT_CHAIN++;
                 BlockchainSystem.LAST_CHAIN = chain;
                 pushMessages();
-                serializeFile.save(BlockchainSystem.LAST_CHAIN);
-                System.out.println(chain);
-            }
 
+                serializeFile.save(BlockchainSystem.LAST_CHAIN);
+
+            }
+            System.out.println(chain);
             if (chain.getGenerationTime() > 1 && BlockchainSystem.ZEROS_COUNT > 0) {
                 synchronized (this) {
                     BlockchainSystem.ZEROS_COUNT--;
@@ -183,8 +189,10 @@ public class BlockchainSystem {
                 }
                 System.out.println("N was increased to " + BlockchainSystem.ZEROS_COUNT + '\n');
             } else {
-                System.out.println("N stays the same" + BlockchainSystem.ZEROS_COUNT + '\n');
+                System.out.println("N stays the same " + BlockchainSystem.ZEROS_COUNT + '\n');
             }
+
+            //VerifyMessage.verify();
         }
 
         //shutdownAndAwaitTermination(executorService);
@@ -231,9 +239,9 @@ public class BlockchainSystem {
             Thread.currentThread().interrupt();
         }
     }
-    public void setMessage(String message){
-        messages.add(message);
-    }
+//    public void setMessage(String message) throws Exception {
+//        messages.add(new Message(message));
+//    }
     private void pushMessages(){
         BlockchainSystem.LAST_CHAIN.setMessages(new ArrayList<>(messages));
         messages.clear();
