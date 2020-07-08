@@ -3,8 +3,10 @@ package blockchain;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SerializeFile {
+public class SerializeFile implements Serializable {
     private ObjectOutputStream os;
     private ObjectInputStream is;
     private FileOutputStream fos;
@@ -19,57 +21,94 @@ public class SerializeFile {
         isOpenRead = false;
     }
 
-    public void save(Chain chain) throws IOException {
-        synchronized (blockchainSystem.getChainList()) {
-            if (blockchainSystem.getFilePathSerialize() == null) {
-                return;
-            }
-            if (!isOpenWrite){
-                fos = new FileOutputStream(blockchainSystem.getFilePathSerialize());
-                //var buffer = new BufferedOutputStream(file);
-                os = new ObjectOutputStream(fos);
-                isOpenWrite = true;
-            }
-            os.writeObject(chain);
+//    public List<OutputStream> saveChain(Object object, String filepath, FileOutputStream fileOutputStream, ObjectOutputStream objectOutputStream) throws IOException {
+//        synchronized (blockchainSystem.getChainList()) {
+//            if (filepath == null) {
+//                return null;
+//            }
+//            return writeWithoutClose(filepath, object, fileOutputStream, objectOutputStream);
+//
+//        }
+//    }
 
+
+    public static boolean write(String file, Object obj) {
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file, true))) {
+            objectOutputStream.writeObject(obj);
+            objectOutputStream.flush();
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 
-    public Object readSerialize() {
-        synchronized (blockchainSystem.getChainList()) {
-            if (isOpenWrite){
-                try {
-                    os.close();
-                    fos.close();
-                    isOpenWrite = false;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (!isOpenRead){
+    public static void writeWithoutClose(Object obj, ObjectOutputStream objectOutputStream) {
+        try {
 
-                try {
-                    fis = new FileInputStream(blockchainSystem.getFilePathSerialize());
-                    is = new ObjectInputStream(fis);
-                    isOpenRead = true;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            try {
-                return is.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            objectOutputStream.writeObject(obj);
+            objectOutputStream.flush();
+            objectOutputStream.reset();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    public static Object read(String file) {
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
+            return inputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             return null;
         }
     }
 
-    public void closeDeserialize(){
+    public static Object readWithoutClose(ObjectInputStream objectInputStream) {
         try {
-            is.close();
+            Object o =  objectInputStream.readObject();
+            return o;
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
+        return null;
     }
+
+    public ObjectOutputStream getOs() {
+        return os;
+    }
+
+    public void setOs(ObjectOutputStream os) {
+        this.os = os;
+    }
+
+    public ObjectInputStream getIs() {
+        return is;
+    }
+
+    public void setIs(ObjectInputStream is) {
+        this.is = is;
+    }
+
+    public FileOutputStream getFos() {
+        return fos;
+    }
+
+    public void setFos(FileOutputStream fos) {
+        this.fos = fos;
+    }
+
+    public FileInputStream getFis() {
+        return fis;
+    }
+
+    public void setFis(FileInputStream fis) {
+        this.fis = fis;
+    }
+
+    public BlockchainSystem getBlockchainSystem() {
+        return blockchainSystem;
+    }
+
 }

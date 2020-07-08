@@ -8,15 +8,17 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class BlockchainSystem {
-    private final String filePathSerialize;
+public class BlockchainSystem implements Serializable {
     private volatile List<Chain> chainList;
     protected volatile static int COUNT_CHAIN;
-    private SerializeFile serializeFile;
+    protected static long maxIdentifyMessage = 1L;
+    transient private SerializeFile serializeFile;
     protected volatile static Chain LAST_CHAIN;
     protected volatile static int ZEROS_COUNT;
     public volatile String nameThread;
     public List<Message> messages = null;
+    private String pathMetaData = "../metaData.txt";
+    private String pathChainsSerializable = "../chains.txt";
     public String[] messText = {
             "Tom: Hey, I'm first!",
             "Sarah: It's not fair!",
@@ -26,63 +28,165 @@ public class BlockchainSystem {
             "Nick: Hey Tom, nice chat"
     };
 
+    public BlockchainSystem() {
+    }
 
-
-
-    public BlockchainSystem(String filePathSerialize, int zerosCount) throws IOException {
+    public BlockchainSystem(int zerosCount) throws IOException {
         serializeFile = new SerializeFile(this);
-        this.filePathSerialize = filePathSerialize;
         this.chainList = new ArrayList<>();
         COUNT_CHAIN = 0;
         LAST_CHAIN = new Chain("0");
         ZEROS_COUNT = zerosCount;
         nameThread = null;
-        var path = Paths.get(getFilePathSerialize());
-
-
         messages = new ArrayList<>();
+
     }
 
+    public void load(String fileMeta, String fileChains) {
+        if (Files.exists(Paths.get(fileMeta))) {
+            try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileMeta))) {
+                BlockchainSystem.COUNT_CHAIN = (int) SerializeFile.readWithoutClose(inputStream);
+                BlockchainSystem.LAST_CHAIN = (Chain) SerializeFile.readWithoutClose(inputStream);
+                BlockchainSystem.ZEROS_COUNT = (int) SerializeFile.readWithoutClose(inputStream);
+            } catch (IOException e) {
+                return;
+            }
+
+
+
+
+        } else {
+            return;
+        }
+        if (Files.exists(Paths.get(fileChains))) {
+            Chain chain;
+            try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileChains))) {
+                for (int i = 0; i < BlockchainSystem.COUNT_CHAIN; i++) {
+                    chain = (Chain) SerializeFile.readWithoutClose(inputStream);
+
+                    getChainList().add(chain);
+                }
+            } catch (IOException e) {
+                return;
+            }
+
+
+
+
+        } else {
+            return;
+        }
+        if (validate()){
+            System.out.println("This Blockchain is valid");
+        }else{
+            System.out.println("This Blockchain isn't valid");
+        }
+
+
+    }
+
+    public String getPathMetaData() {
+        return pathMetaData;
+    }
+
+    public void setPathMetaData(String pathMetaData) {
+        this.pathMetaData = pathMetaData;
+    }
+
+    public String getPathChainsSerializable() {
+        return pathChainsSerializable;
+    }
+
+    public void setPathChainsSerializable(String pathChainsSerializable) {
+        this.pathChainsSerializable = pathChainsSerializable;
+    }
+
+    public void setChainList(List<Chain> chainList) {
+        this.chainList = chainList;
+    }
+
+    public static int getCountChain() {
+        return COUNT_CHAIN;
+    }
+
+    public static void setCountChain(int countChain) {
+        COUNT_CHAIN = countChain;
+    }
+
+    public SerializeFile getSerializeFile() {
+        return serializeFile;
+    }
+
+    public void setSerializeFile(SerializeFile serializeFile) {
+        this.serializeFile = serializeFile;
+    }
+
+    public static Chain getLastChain() {
+        return LAST_CHAIN;
+    }
+
+
+    public static void setLastChain(Chain lastChain) {
+        LAST_CHAIN = lastChain;
+    }
+
+    public static int getZerosCount() {
+        return ZEROS_COUNT;
+    }
+
+    public static void setZerosCount(int zerosCount) {
+        ZEROS_COUNT = zerosCount;
+    }
+
+    public String getNameThread() {
+        return nameThread;
+    }
+
+    public void setNameThread(String nameThread) {
+        this.nameThread = nameThread;
+    }
+
+
     public void simpleShow() {
-        for (Chain chain: chainList) {
+        for (Chain chain : chainList) {
             System.out.println(chain.toString());
 
         }
     }
 
-    public String getFilePathSerialize() {
-        return filePathSerialize;
-    }
 
     public List<Chain> getChainList() {
         return chainList;
     }
 
     public void showFromFile() {
-        deserialize();
         System.out.println("Validate is " + validate());
         System.out.println("\n\n\nDATA IN FILE");
-        for (Chain i : chainList){
+        for (Chain i : chainList) {
             System.out.println(i);
         }
 
     }
 
-    private void deserialize(){
-        for (int i = 0; i < COUNT_CHAIN; i++) {
-            Chain p = (Chain) serializeFile.readSerialize();
-            chainList.add(p);
-        }
-        serializeFile.closeDeserialize();
-    }
 
     public boolean validate() {
-        if (chainList.isEmpty()){
-            deserialize();
-        }
+
         String prevHash = "0";
         for (var chain : chainList) {
+            BlockChainValidator.identifierIsBiggerPrevBlock(chain.getMessages(), chain.getMessages().size());
+            BlockChainValidator.isValidMessage(chain.getMessages());
             if (!chain.validate(prevHash)) {
+                System.out.println("Invalid block: " + chain);
+                return false;
+            }
+            if (chain.getPrevChain().getId() != 0 && BlockChainValidator.identifierIsBigger(chain.getId(), chain.getPrevChain().getId())){
+                System.out.println("Invalid block: " + chain);
+                return false;
+            }
+
+            if (!chain.getCurrentHash().equals(chain.createHash())){
+                System.out.println(chain.getCurrentHash());
+                System.out.println(chain.createHash());
                 System.out.println("Invalid block: " + chain);
                 return false;
             }
@@ -91,113 +195,66 @@ public class BlockchainSystem {
         return true;
     }
 
-    /*public void mining() throws ExecutionException, InterruptedException {
-        ExecutorService executorService = Executors.newWorkStealingPool();
-
-        int N = 0;
-        for (int i = 0; i < 5; i++) {
-            Set<Callable<Chain>> tasks = new HashSet<>();
-            for (int j = 0; j < 16; j++) {
-                tasks.add(new Miner());
-            }
-
-            Chain data = null;
-            try
-            {
-                data = executorService.invokeAny(tasks);
-                serializeFile.save(data);
-                System.out.println(data);
-
-            }
-            catch (InterruptedException | ExecutionException | IOException e)
-            {
-                e.printStackTrace();
-            }
 
 
-            synchronized (this){
-                BlockchainSystem.COUNT_CHAIN++;
-                BlockchainSystem.LAST_CHAIN = data;
-            }
-
-            if (data.getGenerationTime() > 1 && BlockchainSystem.ZEROS_COUNT > 0) {
-                synchronized (this) {
-                    BlockchainSystem.ZEROS_COUNT--;
-                }
-                System.out.println("N was decreased by 1\n");
-            } else if (data.getGenerationTime() < 1) {
-                synchronized (this) {
-                    BlockchainSystem.ZEROS_COUNT++;
-                }
-                System.out.println("N was increased to " + BlockchainSystem.ZEROS_COUNT + '\n');
-            } else {
-                System.out.println("N stays the same\n " + BlockchainSystem.ZEROS_COUNT + '\n');
-            }
-        }
-
-        //shutdownAndAwaitTermination(executorService);
-        executorService.shutdownNow();
-        final boolean done = executorService.awaitTermination(10, TimeUnit.SECONDS);
-        System.out.println("Все ли письма были отправлены? - " + done);
-    }*/
-
-
-    public void mining2() throws Exception {
+    public void mining() throws Exception {
         ExecutorService executorService = Executors.newWorkStealingPool();
         Chain chain = null;
-        int N = 0;
-        for (int i = 0; i < 5; i++) {
-            Set<Callable<List<Object>>> tasks = new HashSet<>();
-            for (int j = 0; j < 16; j++) {
-                tasks.add(new Miner());
-            }
-            double start = System.nanoTime();
-            synchronized (this) {
-
-                GenerateKeys.generate();
-                messages.add(Message.create(messText[i]));
-
-            }
-//            if (BlockchainSystem.COUNT_CHAIN != 0){
-//                Random r = new Random();
-//                int g = r.nextInt(mess.length);
-//                setMessage(mess[g]);
-//            }
-
-            List<Object> data = executorService.invokeAny(tasks);
-            double end = System.nanoTime();
-            chain = new Chain((int)data.get(0), (long)data.get(1), (int)data.get(2), (int)data.get(3), end - start);
-
-
-            synchronized (this){
-                BlockchainSystem.COUNT_CHAIN++;
-                BlockchainSystem.LAST_CHAIN = chain;
-                pushMessages();
-
-                serializeFile.save(BlockchainSystem.LAST_CHAIN);
-
-            }
-            System.out.println(chain);
-            if (chain.getGenerationTime() > 1 && BlockchainSystem.ZEROS_COUNT > 0) {
-                synchronized (this) {
-                    BlockchainSystem.ZEROS_COUNT--;
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(getPathChainsSerializable(), true))) {
+            for (int i = 0; i < 5; i++) {
+                Set<Callable<List<Object>>> tasks = new HashSet<>();
+                for (int j = 0; j < 16; j++) {
+                    tasks.add(new Miner());
                 }
-                System.out.println("N was decreased by 1\n");
-            } else if (chain.getGenerationTime() < 1 && BlockchainSystem.ZEROS_COUNT < 4) {
-                synchronized (this) {
-                    BlockchainSystem.ZEROS_COUNT++;
-                }
-                System.out.println("N was increased to " + BlockchainSystem.ZEROS_COUNT + '\n');
-            } else {
-                System.out.println("N stays the same " + BlockchainSystem.ZEROS_COUNT + '\n');
-            }
 
-            //VerifyMessage.verify();
+                double start = System.nanoTime();
+                synchronized (this) {
+                    GenerateKeys.generate("KeyPair/" + COUNT_CHAIN + "/publicKey", "KeyPair/" + COUNT_CHAIN + "/privateKey");
+                    messages.add(Message.create(messText[i], "KeyPair/" + COUNT_CHAIN + "/privateKey", "MyData/" + COUNT_CHAIN + "/SignedData.txt" , maxIdentifyMessage));
+                    maxIdentifyMessage++;
+                }
+
+                List<Object> data = executorService.invokeAny(tasks);
+                double end = System.nanoTime();
+                chain = new Chain((int) data.get(0), (long) data.get(1), (int) data.get(2), (int) data.get(3), end - start, LAST_CHAIN);
+
+
+                synchronized (this) {
+                    BlockchainSystem.COUNT_CHAIN++;
+                    BlockchainSystem.LAST_CHAIN = chain;
+                    pushMessages(chain);
+
+                    SerializeFile.writeWithoutClose(chain, objectOutputStream);
+
+                }
+                System.out.println(chain);
+                if (chain.getGenerationTime() > 1 && BlockchainSystem.ZEROS_COUNT > 1) {
+                    synchronized (this) {
+                        BlockchainSystem.ZEROS_COUNT--;
+                    }
+                    System.out.println("N was decreased by 1\n");
+                } else if (chain.getGenerationTime() < 1 && BlockchainSystem.ZEROS_COUNT < 4) {
+                    synchronized (this) {
+                        BlockchainSystem.ZEROS_COUNT++;
+                    }
+                    System.out.println("N was increased to " + BlockchainSystem.ZEROS_COUNT + '\n');
+                } else {
+                    System.out.println("N stays the same " + BlockchainSystem.ZEROS_COUNT + '\n');
+                }
+
+                //VerifyMessage.verify();
+                maxIdentifyMessage = 1L;
+            }
+        }catch (IOException e) {
+            return;
         }
 
         //shutdownAndAwaitTermination(executorService);
         executorService.shutdownNow();
         final boolean done = executorService.awaitTermination(5, TimeUnit.SECONDS);
+
+        saveBlockchainMetaData(pathMetaData);
+
         //System.out.println("Все ли письма были отправлены? - " + done);
     }
 
@@ -218,10 +275,11 @@ public class BlockchainSystem {
             }
         }
 
-        for (String i: threads){
+        for (String i : threads) {
             System.out.println(i);
         }
     }
+
     void shutdownAndAwaitTermination(ExecutorService pool) {
         pool.shutdownNow(); // Disable new tasks from being submitted
         try {
@@ -239,12 +297,23 @@ public class BlockchainSystem {
             Thread.currentThread().interrupt();
         }
     }
-//    public void setMessage(String message) throws Exception {
-//        messages.add(new Message(message));
-//    }
-    private void pushMessages(){
-        BlockchainSystem.LAST_CHAIN.setMessages(new ArrayList<>(messages));
+
+    private void pushMessages(Chain chain) {
+        chain.setMessages(new ArrayList<>(messages));
         messages.clear();
     }
+
+    private void saveBlockchainMetaData(String path) {
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(path))) {
+            SerializeFile.writeWithoutClose(COUNT_CHAIN, objectOutputStream);
+            SerializeFile.writeWithoutClose(LAST_CHAIN, objectOutputStream);
+            SerializeFile.writeWithoutClose(ZEROS_COUNT, objectOutputStream);
+        }catch (IOException e) {
+            return;
+        }
+
+    }
+
+
 
 }

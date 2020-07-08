@@ -46,13 +46,13 @@ public class GenerateKeys {
         fos.close();
     }
 
-    public static void generate() {
+    public static void generate(String pathPublicKey, String pathPrivateKey) {
         GenerateKeys gk;
         try {
             gk = new GenerateKeys(1024);
             gk.createKeys();
-            gk.writeToFile("KeyPair/publicKey", gk.getPublicKey().getEncoded());
-            gk.writeToFile("KeyPair/privateKey", gk.getPrivateKey().getEncoded());
+            gk.writeToFile(pathPublicKey, gk.getPublicKey().getEncoded());
+            gk.writeToFile(pathPrivateKey, gk.getPrivateKey().getEncoded());
         } catch (NoSuchAlgorithmException | NoSuchProviderException | IOException e) {
             System.err.println(e.getMessage());
         }

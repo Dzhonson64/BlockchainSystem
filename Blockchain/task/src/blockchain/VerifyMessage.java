@@ -13,16 +13,14 @@ import java.util.List;
 public class VerifyMessage {
     private List<byte[]> list;
 
-    @SuppressWarnings("unchecked")
     //The constructor of VerifyMessage class retrieves the byte arrays from the File
     //and prints the message only if the signature is verified.
     public VerifyMessage(String filename, String keyFile) throws Exception {
         ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename));
         this.list = (List<byte[]>) in.readObject();
         in.close();
-
-        /*System.out.println(verifySignature(list.get(0), list.get(1), keyFile) ? "VERIFIED MESSAGE" +
-                "\n----------------\n" + new String(list.get(0)) : "Could not verify the signature.");*/
+        System.out.println(verifySignature(list.get(0), list.get(1), keyFile) ? "VERIFIED MESSAGE" +
+                "\n----------------\n" + new String(list.get(0)) : "Could not verify the signature.");
     }
 
     //Method for signature verification that initializes with the Public Key,
@@ -43,7 +41,7 @@ public class VerifyMessage {
         return kf.generatePublic(spec);
     }
 
-    public static void verify() throws Exception{
-        new VerifyMessage("MyData/SignedData.txt", "KeyPair/publicKey");
+    public static void verify(String pathSignedData, String publicKey) throws Exception{
+        new VerifyMessage(pathSignedData, publicKey);
     }
 }

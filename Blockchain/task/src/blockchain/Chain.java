@@ -11,6 +11,7 @@ public class Chain implements Serializable {
     private long timeStamp = 0;
     private int magicNumber;
     private double generationTime = 0.0;
+    private Chain prevChain;
 
 
 
@@ -29,8 +30,7 @@ public class Chain implements Serializable {
         generationTime = (System.nanoTime() - start)/1000000000.0;
     }
 
-    public Chain(int id, long timeStamp, int magicNumber, int idMiner, double generationTime) {
-        long start = System.nanoTime();
+    public Chain(int id, long timeStamp, int magicNumber, int idMiner, double generationTime, Chain chain) {
         this.timeStamp = timeStamp;
         this.magicNumber = magicNumber;
         this.id = id;
@@ -39,6 +39,7 @@ public class Chain implements Serializable {
         this.currentHash = createHash(magicNumber);
         this.generationTime = generationTime/1000000000.0;
         messages = new ArrayList<>();
+        prevChain = chain;
     }
 
     public Chain(String defaultHash){
@@ -47,6 +48,14 @@ public class Chain implements Serializable {
 
     public String getCurrentHash() {
         return currentHash;
+    }
+
+    public Chain getPrevChain() {
+        return prevChain;
+    }
+
+    public void setPrevChain(Chain prevChain) {
+        this.prevChain = prevChain;
     }
 
     public String getPrevHash() {
@@ -107,7 +116,7 @@ public class Chain implements Serializable {
         return generationTime;
     }
 
-    private String createHash(){
+    public String createHash(){
         return StringUtil.applySha256(Integer.toString(id) + timeStamp  + magicNumber);
     }
 
@@ -126,6 +135,45 @@ public class Chain implements Serializable {
         this.minerId = minerId;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPrevHash(String prevHash) {
+        this.prevHash = prevHash;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public int getMagicNumber() {
+        return magicNumber;
+    }
+
+    public void setMagicNumber(int magicNumber) {
+        this.magicNumber = magicNumber;
+    }
+
+    public void setGenerationTime(double generationTime) {
+        this.generationTime = generationTime;
+    }
+
+    public int getMinerId() {
+        return minerId;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
@@ -149,4 +197,23 @@ public class Chain implements Serializable {
         return result;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Chain chain = (Chain) o;
+        return id == chain.id &&
+                timeStamp == chain.timeStamp &&
+                magicNumber == chain.magicNumber &&
+                Double.compare(chain.generationTime, generationTime) == 0 &&
+                minerId == chain.minerId &&
+                Objects.equals(prevHash, chain.prevHash) &&
+                Objects.equals(currentHash, chain.currentHash) &&
+                Objects.equals(messages, chain.messages);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, prevHash, currentHash, timeStamp, magicNumber, generationTime, minerId, messages);
+    }
 }
