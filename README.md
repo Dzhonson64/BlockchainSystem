@@ -1,4 +1,4 @@
-# Blockchain system 
+# The blockchain system 
 ![Alt-текст](https://github.com/Dzhonson64/BlockchainSystem/blob/master/Blockchain/task/imgForReadme/blockchain.png "Blockchain")
 ## Information about the app content
 
